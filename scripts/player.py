@@ -32,20 +32,26 @@ class Player(pygame.sprite.Sprite):
     #
     def player_input(self):
         keys = pygame.key.get_pressed()
+        speed_modifier = 1
+        num_keys_pressed = sum(1 for key in keys if key)
+
+        # Reduce speed if the player is moving diagonally
+        if (num_keys_pressed > 1):
+            speed_modifier = 1.41
         if keys[pygame.K_w]:
-            self.rect.y -= self.speed
+            self.rect.y -= self.speed/speed_modifier
             self.direction_index = 2
             self.animation_state()
         if keys[pygame.K_d]:
-            self.rect.x += self.speed
+            self.rect.x += self.speed/speed_modifier
             self.direction_index = 1
             self.animation_state()
         if keys[pygame.K_s]:
-            self.rect.y += self.speed
+            self.rect.y += self.speed/speed_modifier
             self.direction_index = 0
             self.animation_state()
         if keys[pygame.K_a]:
-            self.rect.x -= self.speed
+            self.rect.x -= self.speed/speed_modifier
             self.direction_index = 3
             self.animation_state()
     
