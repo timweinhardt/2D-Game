@@ -26,22 +26,33 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.player_walk[self.direction_index][self.frame_index]
         self.image = pygame.transform.scale_by(self.image, 4)
-        self.rect = self.image.get_rect(center = (config.SCREEN_WIDTH/2,config.SCREEN_HEIGHT/2))
+        self.x = config.SCREEN_WIDTH/2
+        self.y = config.SCREEN_HEIGHT/2
+        self.rect = self.image.get_rect(topleft = (self.x, self.y))
+        self.player_speed = 3
     #
     # Player input listener
     #
     def player_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
+            self.y -= self.player_speed
+            print(self.x, ',', self.y)
             self.direction_index = 2
             self.animation_state()
-        if keys[pygame.K_d]:
+        elif keys[pygame.K_d]:
+            self.x += self.player_speed
+            print(self.x, ',', self.y)
             self.direction_index = 1
             self.animation_state()
-        if keys[pygame.K_s]:
+        elif keys[pygame.K_s]:
+            self.y += self.player_speed
+            print(self.x, ',', self.y)
             self.direction_index = 0
             self.animation_state()
-        if keys[pygame.K_a]:
+        elif keys[pygame.K_a]:
+            self.x -= self.player_speed
+            print(self.x, ',', self.y)
             self.direction_index = 3
             self.animation_state()
     
