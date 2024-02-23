@@ -4,9 +4,10 @@
 import pygame
 import config
 from sys import exit
-from random import choice
+from random import choice, randint
 from player import Player
-from tile import Tile
+from camera import CameraGroup
+from tile import BackgroundTile, ForegroundTile
 
 #
 # Initialize pygame and display window
@@ -18,19 +19,23 @@ pygame.display.set_caption('2D Game')
 #
 # Sprite groups
 #
-player = pygame.sprite.GroupSingle()
-player.add(Player())
-tile = pygame.sprite.Group()
+camera_group = CameraGroup()
+player = Player((config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2), camera_group)
 
 #
 # Tile generation
 #
-def generateChunk(num):
-    for i in range(int(-num/2), int(num/2)):
-        for j in range(int(-num/2), int(num/2)):
-            new_tile_x = (config.SCREEN_WIDTH/2 - config.TILE_SIZE) + (j * config.TILE_SIZE)
-            new_tile_y = (config.SCREEN_HEIGHT/2 - config.TILE_SIZE) + (i * config.TILE_SIZE)
-            tile.add(Tile(choice(['grass-01', 'grass-02']), new_tile_x, new_tile_y))
+
+# Background tiles (ex. Grass)
+for i in range(config.TILE_ROWS):
+    for j in range(config.TILE_COLS):
+        BackgroundTile(choice(['grass-01', 'grass-02']), (j * config.TILE_SIZE, i * config.TILE_SIZE), camera_group)
+
+# Foreground tiles (ex. Rocks)
+for i in range(3):
+    y_pos = randint(0, config.TILE_ROWS)
+    x_pos = randint(0, config.TILE_COLS)
+    ForegroundTile('rock-01', (x_pos * config.TILE_SIZE, y_pos * config.TILE_SIZE), camera_group)
 
 #
 # Timers
@@ -45,14 +50,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-            generateChunk(16)
 
     screen.fill('#ffffff')
-    tile.draw(screen)
-    tile.update()
-    player.update()
-    player.draw(screen)
+    camera_group.update()
+    camera_group.custom_draw(player)
 
     pygame.display.update()
     clock.tick(60)

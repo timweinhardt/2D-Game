@@ -1,9 +1,8 @@
 import pygame
-import config
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, pos, group):
+        super().__init__(group)
         front_1 = pygame.image.load('assets/textures/player/front-01.png').convert_alpha()
         front_2 = pygame.image.load('assets/textures/player/front-02.png').convert_alpha()
         front_3 = pygame.image.load('assets/textures/player/front-03.png').convert_alpha()
@@ -26,33 +25,34 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.player_walk[self.direction_index][self.frame_index]
         self.image = pygame.transform.scale_by(self.image, 4)
-        self.x = config.SCREEN_WIDTH/2
-        self.y = config.SCREEN_HEIGHT/2
-        self.rect = self.image.get_rect(topleft = (self.x, self.y))
-        self.player_speed = 3
+        self.rect = self.image.get_rect(center = pos)
+
+        self.direction = pygame.math.Vector2()
+        self.position = pos
+        self.speed = 3
     #
     # Player input listener
     #
-    def player_input(self):
+    def input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            self.y -= self.player_speed
-            print(self.x, ',', self.y)
+            self.rect.y -= self.speed
+            self.position -= pygame.math.Vector2((0, self.speed))
             self.direction_index = 2
             self.animation_state()
         elif keys[pygame.K_d]:
-            self.x += self.player_speed
-            print(self.x, ',', self.y)
+            self.rect.x += self.speed
+            self.position += pygame.math.Vector2((self.speed, 0))
             self.direction_index = 1
             self.animation_state()
         elif keys[pygame.K_s]:
-            self.y += self.player_speed
-            print(self.x, ',', self.y)
+            self.rect.y += self.speed
+            self.position += pygame.math.Vector2((0, self.speed))
             self.direction_index = 0
             self.animation_state()
         elif keys[pygame.K_a]:
-            self.x -= self.player_speed
-            print(self.x, ',', self.y)
+            self.rect.x -= self.speed
+            self.position -= pygame.math.Vector2((self.speed, 0))
             self.direction_index = 3
             self.animation_state()
     
@@ -68,6 +68,6 @@ class Player(pygame.sprite.Sprite):
     # This method updates the player information
     #
     def update(self):
-        self.player_input()
+        self.input()
         self.image = self.player_walk[self.direction_index][int(self.frame_index)]
         self.image = pygame.transform.scale_by(self.image, 4)
