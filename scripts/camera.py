@@ -1,5 +1,6 @@
 import pygame
 from tile import BackgroundTile
+import config
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -8,13 +9,14 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
         self.half_w = self.display_surface.get_size()[0] // 2
         self.half_h = self.display_surface.get_size()[1] // 2
+        self.delay = 0.07
 
     #
     # Update camera offset based on target's (ex. player) position
     #
     def center_target_camera(self, target):
-        self.offset.x = target.rect.centerx - self.half_w
-        self.offset.y = target.rect.centery - self.half_h
+        self.offset.x += (target.rect.centerx - (self.half_w + self.offset.x)) * self.delay
+        self.offset.y += (target.rect.centery - (self.half_h + self.offset.y)) * self.delay
 
     #
     # Draw background and foreground tiles
