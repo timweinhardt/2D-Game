@@ -21,6 +21,8 @@ To play the game, follow these steps:
 
 ## Gameplay
 In this game, players control the protagonist as they navigate through different biomes and collect a variety of resources.
+![image](https://github.com/timweinhardt/2D-Game/assets/145371090/a7eaf250-7180-4639-9603-416ab046d1ea)
+
 
 ## Controls
 - **WASD**: Move character
